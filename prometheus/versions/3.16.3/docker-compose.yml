@@ -24,6 +24,8 @@ services:
     command:
       - "--config.file=/etc/prometheus/prometheus.yml"
       - "--web.enable-lifecycle"
+    networks:
+      - 1panel-network
 
   node-exporter:
     image: prom/node-exporter:latest
@@ -32,6 +34,8 @@ services:
     restart: unless-stopped
     ports:
       - "9100:9100"
+    networks: 
+      - 1panel-network
 
   alertmanager:
     image: prom/alertmanager:latest
@@ -55,6 +59,8 @@ services:
     command:
       - "--cluster.advertise-address=0.0.0.0:9093"
       - "--config.file=/etc/alertmanager/alertmanager.yml"
+    networks:
+      - 1panel-network
 
   grafana:
     depends_on:
@@ -69,6 +75,8 @@ services:
       - "./grafana/data:/var/lib/grafana"
     ports:
       - "${GRAFANA_HTTP_PORT}:3000"
+    networks:
+      - 1panel-network
 
   prometheusalert-center:
     depends_on:
@@ -83,5 +91,10 @@ services:
     privileged: true
     ports:
       - "${ALERT_HTTP_PORT}:8080"
+    networks: 
+      - 1panel-network
 
+networks:
+    1panel-network:
+        external: true
 

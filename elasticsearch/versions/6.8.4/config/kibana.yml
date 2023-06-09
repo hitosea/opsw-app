@@ -1,6 +1,6 @@
 server.name: kibana
 server.host: "0.0.0.0"
-elasticsearch.hosts: [ "http://elasticsearch:${ES_PORT}" ]
+elasticsearch.hosts: [ "http://${ES_LINK}:${ES_PORT}" ]
 xpack.monitoring.ui.container.elasticsearch.enabled: true
 elasticsearch.username: "${ELASTIC_USER}"
 elasticsearch.password: "${ELASTIC_PASSWORD}"

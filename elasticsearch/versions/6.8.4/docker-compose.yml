@@ -22,6 +22,8 @@ services:
     ports:
       - "${ES_PORT}:9200"
       - "9300:9300"
+    networks:
+      - 1panel-network
 
   logstash:
     depends_on:
@@ -29,6 +31,7 @@ services:
     image: "docker.elastic.co/logstash/logstash:6.8.4"
     environment:
       ES_PORT: ${ES_PORT}
+      ES_LINK: elasticsearch
       ELASTIC_USER: ${ELASTIC_USER}
       ELASTIC_PASSWORD: ${ELASTIC_PASSWORD}
     volumes:
@@ -39,6 +42,8 @@ services:
       - "5044:5044"
     links:
       - elasticsearch
+    networks:
+      - 1panel-network
 
   kibana:
     depends_on:
@@ -47,6 +52,7 @@ services:
     environment:
       ES_PORT: ${ES_PORT}
       ELASTIC_USER: ${ELASTIC_USER}
+      ES_LINK: elasticsearch
       ELASTIC_PASSWORD: ${ELASTIC_PASSWORD}
     volumes:
       - /etc/localtime:/etc/localtime
@@ -56,9 +62,13 @@ services:
       - "${KBN_PORT}:5601"
     links:
       - elasticsearch
+    networks:
+      - 1panel-network
 
 volumes:
   data:
     driver: local
 
-
+networks:
+    1panel-network:
+        external: true
