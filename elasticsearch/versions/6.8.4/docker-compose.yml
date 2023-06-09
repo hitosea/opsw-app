@@ -1,0 +1,64 @@
+version: '3.4'
+
+services:
+  elasticsearch:
+    container_name: ${CONTAINER_NAME}
+    image: "docker.elastic.co/elasticsearch/elasticsearch:6.8.4"
+    environment:
+      TZ: Asia/Shanghai
+      LANG: en_US.UTF-8
+      discovery.type: single-node
+      TAKE_FILE_OWNERSHIP: "true"
+      ES_JAVA_OPTS: ${ES_JAVA_OPTS}
+      ELASTIC_USER: ${ELASTIC_USER}
+      ELASTIC_PASSWORD: ${ELASTIC_PASSWORD}
+      ES_PORT: ${ES_PORT}
+    volumes:
+      - /etc/localtime:/etc/localtime
+      - ./data:/usr/share/elasticsearch/data
+      - ./logs:/usr/share/elasticsearch/logs
+      - ./config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+    restart: unless-stopped
+    ports:
+      - "${ES_PORT}:9200"
+      - "9300:9300"
+
+  logstash:
+    depends_on:
+      - elasticsearch
+    image: "docker.elastic.co/logstash/logstash:6.8.4"
+    environment:
+      ES_PORT: ${ES_PORT}
+      ELASTIC_USER: ${ELASTIC_USER}
+      ELASTIC_PASSWORD: ${ELASTIC_PASSWORD}
+    volumes:
+      - ./config/logstash.conf:/usr/share/logstash/pipeline/logstash.conf
+      - ./config/logstash.yml:/usr/share/logstash/config/logstash.yml
+    restart: unless-stopped
+    ports:
+      - "5044:5044"
+    links:
+      - elasticsearch
+
+  kibana:
+    depends_on:
+      - elasticsearch
+    image: "docker.elastic.co/kibana/kibana:6.8.4"
+    environment:
+      ES_PORT: ${ES_PORT}
+      ELASTIC_USER: ${ELASTIC_USER}
+      ELASTIC_PASSWORD: ${ELASTIC_PASSWORD}
+    volumes:
+      - /etc/localtime:/etc/localtime
+      - ./config/kibana.yml:/usr/share/kibana/config/kibana.yml
+    restart: unless-stopped
+    ports:
+      - "${KBN_PORT}:5601"
+    links:
+      - elasticsearch
+
+volumes:
+  data:
+    driver: local
+
+

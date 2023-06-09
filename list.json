@@ -1,0 +1,71 @@
+{
+  "version": "v0.0.39",
+  "tags": [
+    {
+      "key": "WebSite",
+      "name": "建站"
+    },
+    {
+      "key": "Server",
+      "name": "Web 服务器"
+    },
+    {
+      "key": "Runtime",
+      "name": "运行环境"
+    },
+    {
+      "key": "Database",
+      "name": "数据库"
+    },
+    {
+      "key": "Tool",
+      "name": "工具"
+    },
+    {
+      "key": "CI/CD",
+      "name": "CI/CD"
+    },
+    {
+      "key": "Local",
+      "name": "本地"
+    }
+  ],
+  "items": [
+    {
+      "key": "elasticsearch",
+      "name": "elasticsearch",
+      "tags": [
+        "Local"
+      ],
+      "versions": [
+        "6.8.4"
+      ],
+      "shortDescZh": "你知道的，用于搜索",
+      "shortDescEn": "You Know, for Search",
+      "type": "tool",
+      "limit": 1,
+      "crossVersionUpdate": false,
+      "website": "https://www.elastic.co/cn/",
+      "github": "https://github.com/elastic/elasticsearch",
+      "document": "https://www.elastic.co/guide/en/elasticsearch/reference/7.17/getting-started.html"
+    },
+    {
+      "key": "prometheus",
+      "name": "prometheus",
+      "tags": [
+        "Local"
+      ],
+      "versions": [
+        "3.16.3"
+      ],
+      "shortDescZh": "Prometheus 是 Cloud Native Computing Foundation 项目，是一个系统和服务监控系统。",
+      "shortDescEn": "Prometheus, a Cloud Native Computing Foundation project, is a systems and service monitoring system. ",
+      "type": "tool",
+      "limit": 1,
+      "crossVersionUpdate": false,
+      "website": "https://prometheus.io/",
+      "github": "https://github.com/prometheus/prometheus",
+      "document": "https://prometheus.io/docs/introduction/overview/"
+    }
+  ]
+}

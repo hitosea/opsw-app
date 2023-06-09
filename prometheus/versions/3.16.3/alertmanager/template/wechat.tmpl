@@ -1,0 +1,11 @@
+{{ define "wechat.default.message" }}
+{{ range .Alerts }}
+========监控报警==========
+告警状态：{{   .Status }}
+告警级别：{{ .Labels.severity }}
+告警类型：{{ .Labels.alertname }}
+告警应用：{{ .Annotations.summary }}
+告警主机：{{ .Labels.instance }}
+告警详情：{{ .Annotations.description }}
+触发阀值：{{ .Annotations.value }}
+告警时间：{{ (.StartsAt.Add 28800e9).Format "2006-01-02 15:04:05" }} ========end============= {{ end }} {{ end }}

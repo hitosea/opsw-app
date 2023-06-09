@@ -1,0 +1,61 @@
+
+{  
+  "formFields": [ 
+    {  
+      "type": "number",
+      "labelZh": "Grafana网页端口",  
+      "labelEn": "Grafana Web Port",  
+      "required": true,  
+      "default": 3000,  
+      "rule": "paramPort",  
+      "envKey": "GRAFANA_HTTP_PORT",  
+      "edit": true  
+    },
+    {  
+      "type": "number",
+      "labelZh": "AlterManager网页端口",  
+      "labelEn": "Alter Web Port",  
+      "required": true,  
+      "default": 8080,  
+      "rule": "paramPort",  
+      "envKey": "ALERT_HTTP_PORT",  
+      "edit": true  
+    },
+    {
+      "type": "text",
+      "labelZh": "企业微信ID",
+      "labelEn": "WeCom ID",
+      "required": false,
+      "default": "",
+      "envKey": "WECOM_ID",
+      "edit": true
+    },
+    {
+      "type": "text",
+      "labelZh": "企业微信部门ID",
+      "labelEn": "WeCom Party ID",
+      "required": false,
+      "default": "",
+      "envKey": "WECOM_PARTY_ID",
+      "edit": true
+    },
+    {
+      "type": "text",
+      "labelZh": "企业微信应用ID",
+      "labelEn": "WeCom APP ID",
+      "required": false,
+      "default": "",
+      "envKey": "WECOM_APP_ID",
+      "edit": true
+    },
+    {
+      "type": "text",
+      "labelZh": "企业微信API密钥",
+      "labelEn": "WeCom API Secret",
+      "required": false,
+      "default": "",
+      "envKey": "WECOM_API_SECRET",
+      "edit": true
+    }
+  ]  
+}

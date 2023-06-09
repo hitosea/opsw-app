@@ -1,0 +1,87 @@
+version: '3'
+
+services:
+  prometheus:
+    container_name: ${CONTAINER_NAME}
+    depends_on:
+      - alertmanager
+    image: prom/prometheus:latest
+    environment:
+      - TZ=Asia/Shanghai
+    restart: unless-stopped
+    privileged: true
+    volumes:
+      - type: bind
+        source: ./prometheus/prometheus.yml
+        target: /etc/prometheus/prometheus.yml
+        read_only: true
+      - type: bind
+        source: ./prometheus/alert-rules.yml
+        target: /etc/prometheus/alert-rules.yml
+        read_only: true
+    ports:
+      - "9090:9090"
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--web.enable-lifecycle"
+
+  node-exporter:
+    image: prom/node-exporter:latest
+    environment:
+      - TZ=Asia/Shanghai
+    restart: unless-stopped
+    ports:
+      - "9100:9100"
+
+  alertmanager:
+    image: prom/alertmanager:latest
+    environment:
+      - TZ=Asia/Shanghai
+      - WECOM_ID=${WECOM_ID}
+      - WECOM_PARTY_ID=${WECOM_PARTY_ID}
+      - WECOM_APP_ID=${WECOM_APP_ID}
+      - WECOM_API_SECRET=${WECOM_API_SECRET}
+    volumes:
+      - type: bind
+        source: ./alertmanager
+        target: /etc/alertmanager
+        read_only: true
+    restart: unless-stopped
+    privileged: true
+    user: root
+    ports:
+      - "9093:9093"
+      - "9094:9094"
+    command:
+      - "--cluster.advertise-address=0.0.0.0:9093"
+      - "--config.file=/etc/alertmanager/alertmanager.yml"
+
+  grafana:
+    depends_on:
+      - prometheus
+    image: grafana/grafana:latest
+    environment:
+      - TZ=Asia/Shanghai
+    restart: unless-stopped
+    privileged: true
+    user: root
+    volumes:
+      - "./grafana/data:/var/lib/grafana"
+    ports:
+      - "${GRAFANA_HTTP_PORT}:3000"
+
+  prometheusalert-center:
+    depends_on:
+      - grafana
+      - node-exporter
+    image: feiyu563/prometheus-alert:latest
+    environment:
+      - TZ=Asia/Shanghai
+    volumes:
+      - ./prometheusalert-center:/app/conf
+    restart: unless-stopped
+    privileged: true
+    ports:
+      - "${ALERT_HTTP_PORT}:8080"
+
+

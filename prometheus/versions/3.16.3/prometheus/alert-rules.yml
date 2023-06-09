@@ -1,0 +1,60 @@
+groups:
+- name: Node_Down
+  rules:
+  - alert: docker容器已宕机
+    expr: up == 0
+    for: 10s
+    labels:
+      name: prometheusalertcenter
+      level: 3 (严重)  #告警级别,告警级别定义 0 信息,1 警告,2 一般严重,3 严重,4 灾难
+    annotations:
+      description: "{{ $labels.instance }} of job {{ $labels.job }} has been Down."
+- name: Host
+  rules:
+  - alert: HostCPU
+    expr: 100 * (1 - avg(irate(node_cpu_seconds_total{mode="idle"}[2m])) by(instance)) > 80
+    for: 5m
+    labels:
+      level: 3 (严重)
+    annotations:
+      description: "{{$labels.instance}}: CPU usage is {{$value}}, above 80%"
+
+  - alert: HostCPU
+    expr: 100 * (1 - avg(irate(node_cpu_seconds_total{mode="idle"}[2m])) by(instance)) > 95
+    for: 5m
+    labels:
+      level: 4 (灾难)
+    annotations:
+      description: "{{$labels.instance}}: CPU usage is {{$value}}, above 95%"
+
+  - alert: HostMemory
+    expr: (node_memory_MemTotal_bytes - node_memory_MemAvailable_bytes) / node_memory_MemTotal_bytes * 100 > 80
+    for: 5m
+    labels:
+      level: 3 (严重)
+    annotations:
+      description: "{{$labels.instance}}: Memory Usage i{{ $value }}, above 80%"
+
+  - alert: HostMemory
+    expr: (node_memory_MemTotal_bytes - node_memory_MemAvailable_bytes) / node_memory_MemTotal_bytes * 100 > 95
+    for: 5m
+    labels:
+      level: 4 (灾难)
+    annotations:
+      description: "{{$labels.instance}}: Memory Usage i{{ $value }}, above 95%"
+
+  - alert: HostDisk
+    expr: round(max((node_filesystem_size_bytes{fstype=~"ext.?|xfs"}-node_filesystem_free_bytes{fstype=~"ext.?|xfs"})*100/(node_filesystem_avail_bytes{fstype=~"ext.?|xfs"}+(node_filesystem_size_bytes{fstype=~"ext.?|xfs"}-node_filesystem_free_bytes{fstype=~"ext.?|xfs"})))by(instance) ,0.01) > 80
+    for: 5m
+    labels:
+      level: 3 (严重)
+    annotations:
+      description: "{{$labels.instance}}, mountpoint {{$labels.mountpoint}}: Disk Usage is {{ $value }}, above 80%"
+
+  - alert: HostDisk
+    expr: round(max((node_filesystem_size_bytes{fstype=~"ext.?|xfs"}-node_filesystem_free_bytes{fstype=~"ext.?|xfs"})*100/(node_filesystem_avail_bytes{fstype=~"ext.?|xfs"}+(node_filesystem_size_bytes{fstype=~"ext.?|xfs"}-node_filesystem_free_bytes{fstype=~"ext.?|xfs"})))by(instance) ,0.01) > 95
+    for: 5m
+    labels:
+      level: 4 (灾难)
+    annotations:
+      description: "{{$labels.instance}}, mountpoint {{$labels.mountpoint}}: Disk Usage is {{ $value }}, above 95%"
