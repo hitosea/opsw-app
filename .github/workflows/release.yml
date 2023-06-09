@@ -1,0 +1,25 @@
+name: release
+
+on:
+  push:
+    tags:
+    - 'v*'
+
+jobs:
+  release:
+    runs-on: ubuntu-20.04
+
+    steps:
+
+      - uses: actions/checkout@v3
+
+      - name: Build
+        run: |
+          tar czf localApps.tar.gz ./*
+
+      - name: Upload assets
+        uses: softprops/action-gh-release@v1
+        with:
+          files: "localApps.tar.gz"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
